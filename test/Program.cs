@@ -1,4 +1,5 @@
 ﻿namespace ApplianceStore
+
 {
     class Appliance
     {
