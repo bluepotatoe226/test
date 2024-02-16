@@ -16,9 +16,9 @@
             Item Number: {ItemNumber}
             Brand: {Brand}
             Quantity: {Quantity}
-            Wattage: {Wattage}W
+            Wattage: {Wattage}
             Color: {Colour}
-            Price: ${Price}
+            Price: {Price}
             ";
         }
     }
@@ -55,8 +55,7 @@
         {
             return base.ToString() + $@"
             Grade: {Grade}
-            Battery Voltage: {BatteryVoltage}V
-            ";
+            Battery Voltage: {BatteryVoltage} ";
         }
     }
     class Microwave : Appliance
@@ -72,11 +71,9 @@
                 'W' => "Work Site",
                 _ => "Unknown"
             };
-
             return base.ToString() + $@"
             Capacity: {Capacity} cu.ft
-            Room Type: {roomTypeDescription}
-            ";
+            Room Type: {roomTypeDescription} ";
         }
     }
     class Dishwasher : Appliance
@@ -234,16 +231,22 @@
                     DisplayVacuumsByVoltage(voltage);
                     break;
                 case 3:
-                    DisplayMicrowaves();
+                    Console.WriteLine("Room where the microwave will be installed: K (kitchen) or W (work site):");
+                    char roomType = char.ToUpper(Console.ReadKey().KeyChar);
+                    Console.WriteLine(); // To move to the next line
+                    DisplayMicrowavesByRoomType(roomType);
                     break;
                 case 4:
-                    DisplayDishwashers();
+                    Console.WriteLine("Enter the sound rating of the dishwasher: Qt (Quietest), Qr (Quieter), Qu (Quiet) or M (Moderate):");
+                    string soundRating = Console.ReadLine().ToUpper();
+                    DisplayDishwashersBySoundRating(soundRating);
                     break;
                 default:
                     Console.WriteLine("Invalid appliance type.");
                     break;
             }
         }
+
         private void DisplayRefrigeratorsByDoors(int numberOfDoors)
         {
             List<Refrigerator> matchingRefrigerators = appliances.OfType<Refrigerator>().Where(r => r.NumberOfDoors == numberOfDoors).ToList();
@@ -276,12 +279,12 @@
                 Console.WriteLine("No matching vacuums found.");
             }
         }
-        private void DisplayMicrowaves()
+        private void DisplayMicrowavesByRoomType(char roomType)
         {
-            List<Microwave> microwaves = appliances.OfType<Microwave>().ToList();
+            List<Microwave> microwaves = appliances.OfType<Microwave>().Where(m => char.ToUpper(m.RoomType) == roomType).ToList();
             if (microwaves.Any())
             {
-                Console.WriteLine("All Microwaves:");
+                Console.WriteLine("Matching microwaves:");
                 foreach (Microwave microwave in microwaves)
                 {
                     Console.WriteLine(microwave);
@@ -289,15 +292,16 @@
             }
             else
             {
-                Console.WriteLine("No microwaves found.");
+                Console.WriteLine("No matching microwaves found.");
             }
         }
-        private void DisplayDishwashers()
+
+        private void DisplayDishwashersBySoundRating(string soundRating)
         {
-            List<Dishwasher> dishwashers = appliances.OfType<Dishwasher>().ToList();
+            List<Dishwasher> dishwashers = appliances.OfType<Dishwasher>().Where(d => d.SoundRating.ToUpper() == soundRating).ToList();
             if (dishwashers.Any())
             {
-                Console.WriteLine("All Dishwashers:");
+                Console.WriteLine("Matching dishwashers:");
                 foreach (Dishwasher dishwasher in dishwashers)
                 {
                     Console.WriteLine(dishwasher);
@@ -305,9 +309,10 @@
             }
             else
             {
-                Console.WriteLine("No dishwashers found.");
+                Console.WriteLine("No matching dishwashers found.");
             }
         }
+
         public void DisplayRandomAppliances(int num)
         {
             Random random = new Random();
